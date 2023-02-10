@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -9,20 +10,18 @@ const oneDay = 1000 * 60 * 60 * 24;
 
 //session middleware
 app.use(sessions({
-    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    secret: "adfm34idfs0df4nvl33l0d",
     saveUninitialized:true,
     cookie: { maxAge: oneDay },
     resave: false
 }));
 
-// parsing the incoming data
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-//serving public file
 app.use(express.static("./static"));
 
-//username and password
+//username and password kasneje v sql
 const myusername = 'user'
 const mypassword = 'pass'
 
