@@ -3,6 +3,7 @@ router = express.Router();
 const mysql = require('mysql2');
 const sessions = require('express-session');
 // const db = require('../config/SQLConfig');
+const books = require("./books");
 
 
 // one day session
@@ -27,8 +28,9 @@ router.get('/',(req,res) => {
     session=req.session;
     if(session.userid){
         res.sendFile('./strani/notr.html',{root:__dirname});
-    }else
-    res.sendFile('./strani/index.html',{root:__dirname})
+    } else {
+        res.sendFile('./strani/index.html',{root:__dirname})
+    }
 });
 
 router.post('/user',(req,res) => {
@@ -37,8 +39,7 @@ router.post('/user',(req,res) => {
         session.userid=req.body.username;
         console.log(req.session)
         res.sendFile('./strani/notr.html',{root:__dirname});
-    }
-    else{
+    } else {
         res.sendFile('./strani/wrong.html',{root:__dirname});
     }
 })
@@ -48,5 +49,13 @@ router.get('/logout',(req,res) => {
     res.redirect('/');
 });
 
+// can access book api only if authenticated
+router.use("/api", (req,res,next)=>{
+    if(session.userid){
+        next();
+    } else {
+        res.send("not authenticated");
+    }
+}, books);
 
 module.exports = router;
