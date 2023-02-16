@@ -2,7 +2,7 @@ express = require('express');
 router = express.Router();
 const mysql = require('mysql2');
 const sessions = require('express-session');
-// const db = require('../config/SQLConfig');
+const db = require('../config/SQLConfig');
 const books = require("./books");
 
 

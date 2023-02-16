@@ -1,28 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql2');
+const db = require('../config/SQLConfig');
 
 /* IŠČI KNJIGI IN DOBI SEZNAM KNJIG KI USTREZAJO KRITERIJU */
 /* trenutno samo po avtorju, bo treba dodelat */
 router.get('/search', async (req, res, next) => {
     try {
-        /* check input */
-        const schema = Joi.object({
-            keyword: Joi.string().min(0).max(91).required()
-        });
-        const value = await schema.validateAsync(req.query);
+        // /* check input */
+        // const schema = Joi.object({
+        //     keyword: Joi.string().min(0).max(91).required()
+        // });
+        // const value = await schema.validateAsync(req.query);
         const sql = `
-            SELECT id, naslov, avtor, jezik, zbirka, drzava, leto, podrocje, podpodrocje, pozicija, opombe
-            FROM (((Leilina_knjiznica lk 
-            INNER JOIN podrocje pod 
-                ON lk.id_podrocje = pod.id_podrocje 
-                AND lk.id_podpodrocje = pod.id_podpodrocje) 
-            INNER JOIN jezik je 
-                ON lk.id_jezik = je.id_jezik) 
-            INNER JOIN pozicija poz 
-                ON lk.id_pozicija = poz.id_pozicija) 
-            WHERE avtor 
-                LIKE ?`;
+            SELECT id, naslov, avtor, jezik, zbirka, država, LETO, področje, podpodročje, pozicija
+            FROM knjiznica.knjige
+            WHERE jezik=?`;
         const [rows] = await db.execute(sql, [`%${req.query.keyword}%`]);
         if (rows.length == 0) throw new Error('Ne najde nič');
         res.send(rows);
