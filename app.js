@@ -2,13 +2,13 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const routes = require("./routes/index");
-
 const cookieParser = require("cookie-parser");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./static"));
-
 app.use("/", routes);
+
 
 
 // Global Error Handler.
