@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS pozicija(
 );
 
 INSERT INTO pozicija(id_pozicija, pozicija)
-VALUES (1, "klet");
+VALUES (1, "NEVEM");
 INSERT INTO
 pozicija(id_pozicija, pozicija)
 VALUES (2, "dnevna");
@@ -17,3 +17,5 @@ VALUES (4, "oci");
 INSERT INTO
 pozicija(id_pozicija, pozicija)
 VALUES (5, "leila");
+INSERT INTO pozicija(id_pozicija, pozicija)
+VALUES (1, "klet");

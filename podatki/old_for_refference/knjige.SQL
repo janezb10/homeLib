@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS knjige(
     id  INTEGER  NOT NULL PRIMARY KEY AUTO_INCREMENT
-   ,področje   INTEGER
-  ,podpodročje INTEGER  
+   ,področje   INTEGER NOT NULL
+  ,podpodročje INTEGER  NOT NULL
   ,naslov      VARCHAR(91) NOT NULL
-  ,avtor       VARCHAR(38)
-  ,pozicija    INTEGER 
+  ,avtor       VARCHAR(38) NOT NULL
+  ,pozicija    INTEGER NOT NULL DEFAULT 1
   ,jezik       INTEGER 
   ,zbirka      VARCHAR(28)
   ,država      VARCHAR(26)
