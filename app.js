@@ -18,7 +18,7 @@ app.use((err, req, res, next) => {
     console.log("error: " + err.code);
 
     res.status(500).json({
-        errorMessage: err.message || "Something went rely wrong",
+        errorMessage: err.message || "Something went realy wrong",
     });
 });
 

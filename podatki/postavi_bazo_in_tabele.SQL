@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS knjige(
 	,id_podrocje	INTEGER 			NOT NULL DEFAULT 1
 	,id_podpodrocje INTEGER 			NOT NULL DEFAULT 1
 	,id_pozicija	INTEGER 			NOT NULL DEFAULT 1
-	,id_jezik		INTEGER 			NOT NULL DEFAULT 1
+	,id_jezik		INTEGER 			
 	,id_zbirka		INTEGER
 	,drzava			VARCHAR(91)
 	,leto			INTEGER

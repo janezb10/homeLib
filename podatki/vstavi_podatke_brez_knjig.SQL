@@ -3,6 +3,11 @@ VALUES (1, "NE VEM");
 
 
 
+INSERT INTO zbirka(id_zbirka, zbirka)
+VALUES (1, "NE VEM");
+
+
+
 INSERT INTO jezik(id_jezik, jezik)
 VALUES (1, "NE VEM");
 INSERT INTO jezik(id_jezik, jezik)
