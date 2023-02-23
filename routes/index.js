@@ -34,6 +34,9 @@ router.get('/',(req,res) => {
 });
 
 router.post('/user',(req,res) => {
+    
+
+
     if(req.body.username == myusername && req.body.password == mypassword){
         session=req.session;
         session.userid=req.body.username;

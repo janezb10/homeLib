@@ -87,11 +87,7 @@ router.get('/search/:keyword', async (req, res, next) => {
         }
     });
 
-    
-
-
-
-/* POSODOBI PODATKE KNJIGI Z IDJEM */
+/* POSODOBI PODATKE KNJIGI Z IDJEM  SQL atack?*/
 router.put('/updateBook/:id', async (req, res, next) => {
     try {
         const sqlp = `
@@ -118,7 +114,6 @@ router.put('/updateBook/:id', async (req, res, next) => {
             WHERE id = ${req.params.id}
         `;
 
-        console.log(sql);
         const [rows] = await db.execute(sql);
         if (rows.affectedRows == 0) throw new Error('There was a problem updating');
         res.send("book updated");
@@ -128,6 +123,188 @@ router.put('/updateBook/:id', async (req, res, next) => {
     }
 });
 
+//--
+router.get('/avtorji/:keyword?', async (req, res, next) => {
+    try {
+        const sql = `
+        SELECT *
+        FROM avtor
+        WHERE avtor
+        LIKE ?`;
+        const arr = req.params.keyword ? [`%${req.params.keyword}%`] : ['%%'];
+        // if(req.params.keyword) arr.push(`%${req.params.keyword}%`)
+        // else arr.push(`%%`);
+        const [rows] = await db.execute(sql, arr);
+        res.send(rows);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/pozicije/:keyword?', async (req, res, next) => {
+    try {
+        const sql = `
+        SELECT * 
+        FROM pozicija
+        WHERE pozicija
+        LIKE ?`;
+        const arr = req.params.keyword ? [`%${req.params.keyword}%`] : ['%%'];
+        const [rows] = await db.execute(sql, arr);
+        res.send(rows);
+    } catch (err) {
+        next(err);
+    }
+});
+
+
+router.get('/jeziki/:keyword?', async (req, res, next) => {
+    try {
+        const sql = `
+        SELECT *
+        FROM jezik
+        WHERE jezik
+        LIKE ?`;
+        const arr = req.params.keyword ? [`%${req.params.keyword}%`] : ['%%'];
+        const [rows] = await db.execute(sql, arr);
+        res.send(rows);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/zbirke/:keyword?', async (req, res, next) => {
+    try {
+        const sql = `
+        SELECT *
+        FROM zbirka
+        WHERE zbirka
+        LIKE ?`;
+        const arr = req.params.keyword ? [`%${req.params.keyword}%`] : ['%%'];
+        const [rows] = await db.execute(sql, arr);
+        res.send(rows);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/podrocja/:keyword?', async (req, res, next) => {
+    try {
+        const sql = `
+        SELECT *
+        FROM podrocje
+        WHERE podrocje
+        LIKE ?`;
+        const arr = req.params.keyword ?  [`%${req.params.keyword}%`] : ['%%'];
+        const [rows] = await db.execute(sql, arr);
+        res.send(rows);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/podpodrocja/:idPodrocje/:keyword?', async (req, res, next) => {
+    try {
+        const sql = `
+        SELECT *
+        FROM podpodrocje
+        WHERE id_podrocje = ?
+        AND
+        podpodrocje
+        LIKE ?`;
+        const arr = req.params.keyword ? [req.params.idPodrocje, `%${req.params.keyword}%`] : [req.params.idPodrocje, '%%'];
+        const [rows] = await db.execute(sql, arr);
+        res.send(rows);
+    } catch (err) {
+        next(err);
+    }
+});
+
+
+
+
+//dodaj nove
+router.post('/noviAvtor', async (req, res, next) => {
+    try {
+        const sql = `
+        INSERT INTO avtor (avtor)
+        VALUES (?)`;
+        const [rows] = await db.execute(sql, [req.body.avtor]);
+        if(rows.affectedRows == 0) throw new Error('Something went wrong');
+        res.send("new author added");
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/noviJezik', async (req, res, next) => {
+    try {
+        const sql = `
+        INSERT INTO jezik (jezik)
+        VALUES (?)`;
+        const [rows] = await db.execute(sql, [req.body.jezik]);
+        if(rows.affectedRows == 0) throw new Error('Something went wrong');
+        res.send("new language added");
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/novaPozicija', async (req, res, next) => {
+    try {
+        const sql = `
+        INSERT INTO pozicija (pozicija)
+        VALUES (?)`;
+        const [rows] = await db.execute(sql, [req.body.pozicija]);
+        if(rows.affectedRows == 0) throw new Error('Something went wrong');
+        res.send("new position added");
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/novaZbirka', async (req, res, next) => {
+    try {
+        const sql = `
+        INSERT INTO zbirka (zbirka)
+        VALUES (?)`;
+        const [rows] = await db.execute(sql, [req.body.zbirka]);
+        if(rows.affectedRows == 0) throw new Error('Something went wrong');
+        res.send("nova zbirka dodana");
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/novoPodrocje', async (req, res, next) => {
+    try {
+        const sql = `
+        INSERT INTO podrocje (podrocje)
+        VALUES (?)`;
+        const [rows] = await db.execute(sql, [req.body.podrocje]);
+        if(rows.affectedRows == 0) throw new Error('Something went wrong');
+        res.send("novo podrocje dodano");
+    } catch(err) {
+        next(err)
+    }
+});
+
+router.post('/novoPodpodrocje', async (req, res, next) => {
+    try {
+        const sql = `
+        INSERT INTO podpodrocje (id_podrocje, podpodrocje)
+        VALUES(?, ?)`;
+        const arr = [req.body.id_podrocje, req.body.podpodrocje];
+        console.log(arr);
+        const [rows] = await db.execute(sql, [req.body.id_podrocje, req.body.podpodrocje]);
+        if(rows.affectedRows == 0) throw new Error('Something went wrong');
+        res.send("novo podpodrocje dodano");
+    } catch(err) {
+        next(err);
+    }
+});
+
+
+//--
 /* ZBRIŠI KNJIGO ČE JO POJE PES */
 router.delete('/deleteBook/:id', async (req, res, next) => {
     try {
@@ -141,6 +318,4 @@ router.delete('/deleteBook/:id', async (req, res, next) => {
         next(err);
     }
 })
-
-
 module.exports = router;
