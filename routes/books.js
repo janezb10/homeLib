@@ -100,21 +100,35 @@ router.put('/updateBook/:id', async (req, res, next) => {
         const sql = `
             UPDATE knjige
             SET 
-            id = ${req.params.id}
-            ${req.body.naslov ? ", naslov = "+"'"+ req.body.naslov+"'" : ""}
-            ${req.body.id_avtor ? ", id_avtor = "+ req.body.id_avtor : ""}
-            ${req.body.id_podrocje ? ", id_podrocje = "+ req.body.id_podrocje : ""}
-            ${req.body.id_podpodrocje ? ", id_podpodrocje = "+ req.body.id_podpodrocje : ""}
-            ${req.body.id_pozicija ? ", id_pozicija = "+ req.body.id_pozicija : ""}
-            ${req.body.id_jezik ? ", id_jezik = "+ req.body.id_jezik : ""}
-            ${req.body.id_zbirka ? ", id_zbirka = "+ req.body.id_zbirka : ""}
-            ${req.body.drzava ? ", drzava = "+"'"+ req.body.drzava+"'" : ""}
-            ${req.body.leto ? ", leto = "+ req.body.leto : ""}
-            ${req.body.opombe ? ", opombe = "+"'"+ req.body.opombe+"'" : ""}
-            WHERE id = ${req.params.id}
+            id = ?
+            ${req.body.naslov ? ", naslov = ?" : ""}
+            ${req.body.id_avtor ? ", id_avtor = ?" : ""}
+            ${req.body.id_podrocje ? ", id_podrocje = ?" : ""}
+            ${req.body.id_podpodrocje ? ", id_podpodrocje = ?" : ""}
+            ${req.body.id_pozicija ? ", id_pozicija = ?" : ""}
+            ${req.body.id_jezik ? ", id_jezik = ?" : ""}
+            ${req.body.id_zbirka ? ", id_zbirka = ?" : ""}
+            ${req.body.drzava ? ", drzava = ?" : ""}
+            ${req.body.leto ? ", leto = ?" : ""}
+            ${req.body.opombe ? ", opombe = ?" : ""}
+            WHERE id = ?
         `;
+        let ar = [];
+        if(req.params.id) ar.push(req.params.id);
+        if(req.body.naslov) ar.push(req.body.naslov);
+        if(req.body.id_avtor) ar.push(req.body.id_avtor);
+        if(req.body.id_podrocje) ar.push(req.body.id_podrocje);
+        if(req.body.id_podpodrocje) ar.push(req.body.id_podpodrocje);
+        if(req.body.id_pozicija) ar.push(req.body.id_pozicija);
+        if(req.body.id_jezik) ar.push(req.body.id_jezik);
+        if(req.body.id_zbirka) ar.push(req.body.id_zbirka);
+        if(req.body.drzava) ar.push(req.body.drzava);
+        if(req.body.leto) ar.push(req.body.leto);
+        if(req.body.opombe) ar.push(req.body.opombe);
+        if(req.params.id) ar.push(req.params.id);
 
-        const [rows] = await db.execute(sql);
+
+        const [rows] = await db.execute(sql, ar);
         if (rows.affectedRows == 0) throw new Error('There was a problem updating');
         res.send("book updated");
     }
@@ -123,7 +137,7 @@ router.put('/updateBook/:id', async (req, res, next) => {
     }
 });
 
-//--
+
 router.get('/avtorji/:keyword?', async (req, res, next) => {
     try {
         const sql = `
@@ -132,8 +146,6 @@ router.get('/avtorji/:keyword?', async (req, res, next) => {
         WHERE avtor
         LIKE ?`;
         const arr = req.params.keyword ? [`%${req.params.keyword}%`] : ['%%'];
-        // if(req.params.keyword) arr.push(`%${req.params.keyword}%`)
-        // else arr.push(`%%`);
         const [rows] = await db.execute(sql, arr);
         res.send(rows);
     } catch (err) {
@@ -304,7 +316,6 @@ router.post('/novoPodpodrocje', async (req, res, next) => {
 });
 
 
-//--
 /* ZBRIŠI KNJIGO ČE JO POJE PES */
 router.delete('/deleteBook/:id', async (req, res, next) => {
     try {
