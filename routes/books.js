@@ -57,9 +57,15 @@ router.post('/newBook', async (req, res, next) => {
 router.get('/bookId/:id', async (req, res, next) => {
     try {
         const sql = `
-        SELECT id, naslov, id_avtor, id_podrocje, id_podpodrocje, id_pozicija, id_jezik, id_zbirka, drzava, leto, opombe
-        FROM knjige
-        WHERE id = ?;`;
+            SELECT id, naslov, avtor, podrocje, podpodrocje, pozicija, jezik, zbirka, drzava, leto, opombe
+            FROM knjige
+            LEFT JOIN avtor ON knjige.id_avtor = avtor.id_avtor
+            LEFT JOIN podrocje ON knjige.id_podrocje = podrocje.id_podrocje
+            LEFT JOIN podpodrocje ON knjige.id_podpodrocje = podpodrocje.id_podpodrocje AND knjige.id_podrocje = podpodrocje.id_podrocje
+            LEFT JOIN pozicija ON knjige.id_pozicija = pozicija.id_pozicija
+            LEFT JOIN jezik ON knjige.id_jezik = jezik.id_jezik
+            LEFT JOIN zbirka ON knjige.id_zbirka = zbirka.id_zbirka
+            WHERE id = ?;`;
         const [rows] = await db.execute(sql, [req.params.id]);
         if (rows.length == 0) throw new Error('There is no book with that ID');
         res.send(rows);
@@ -74,10 +80,16 @@ router.get('/bookId/:id', async (req, res, next) => {
 router.get('/search/:keyword', async (req, res, next) => {
     try {
         const sql = `
-            SELECT id, naslov, id_avtor, id_podrocje, id_podpodrocje, id_pozicija, id_jezik, id_zbirka, drzava, leto, opombe
-            FROM knjige
-            WHERE naslov 
-            LIKE ?`;
+        SELECT id, naslov, avtor, podrocje, podpodrocje, pozicija, jezik, zbirka, drzava, leto, opombe
+        FROM knjige
+        LEFT JOIN avtor ON knjige.id_avtor = avtor.id_avtor
+        LEFT JOIN podrocje ON knjige.id_podrocje = podrocje.id_podrocje
+        LEFT JOIN podpodrocje ON knjige.id_podpodrocje = podpodrocje.id_podpodrocje AND knjige.id_podrocje = podpodrocje.id_podrocje
+        LEFT JOIN pozicija ON knjige.id_pozicija = pozicija.id_pozicija
+        LEFT JOIN jezik ON knjige.id_jezik = jezik.id_jezik
+        LEFT JOIN zbirka ON knjige.id_zbirka = zbirka.id_zbirka
+        WHERE naslov
+        LIKE ?;`;
             const [rows] = await db.execute(sql, [`%${req.params.keyword}%`]);
             if (rows.length == 0) throw new Error('Nothing was found');
             res.send(rows);
