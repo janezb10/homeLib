@@ -8,7 +8,9 @@ SQL za postavitev baze v /podatki
   1.postavi_bazo_in_tabele.SQL
   2.vstavi_podatke_brez_knjig.SQL
   3.vsavi_knjige.SQL
-  
+
+ustvari .env datoteko po principu .env_sample  
+
 start node aplikacije: npm start
 
 
